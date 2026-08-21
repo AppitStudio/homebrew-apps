@@ -8,19 +8,28 @@ A [Homebrew tap](https://docs.brew.sh/Taps) for macOS apps by [Appit Studio](htt
 brew install --cask appitstudio/apps/extrabar
 ```
 
-That taps this repository and installs the app in one step. If you prefer to tap first:
+That taps this repository, trusts the cask and installs the app in one step.
+
+**Use the fully-qualified name.** Homebrew requires third-party taps to be
+trusted before it will load anything from them, and naming the cask in full is
+what grants that trust. Installing by bare token after tapping fails with
+`Refusing to load cask ... from untrusted tap`. If you prefer to tap first, trust
+it explicitly:
 
 ```sh
 brew tap appitstudio/apps
+brew trust appitstudio/apps
 brew install --cask extrabar
 ```
 
-Or, in a `brew bundle` `Brewfile`:
+Or, in a `brew bundle` `Brewfile` (run `brew trust appitstudio/apps` once first):
 
 ```ruby
 tap "appitstudio/apps"
 cask "extrabar"
 ```
+
+See [Homebrew's tap trust documentation](https://docs.brew.sh/Tap-Trust) for background.
 
 ## Casks
 
