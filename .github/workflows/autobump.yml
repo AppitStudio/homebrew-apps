@@ -48,14 +48,17 @@ jobs:
           bumped=0
           for file in "$(brew --repository "$TAP_NAME")"/Casks/*.rb; do
             token="$(basename "$file" .rb)"
-            outdated="$(brew livecheck --cask --json "$TAP_NAME/$token" | jq -r '.[0].version.outdated')"
-            if [[ "$outdated" != "true" ]]; then
+            json="$(brew livecheck --cask --json "$TAP_NAME/$token")"
+            outdated="$(jq -r '.[0].version.outdated' <<<"$json")"
+            latest="$(jq -r '.[0].version.latest' <<<"$json")"
+            if [[ "$outdated" != "true" || -z "$latest" || "$latest" == "null" ]]; then
               echo "$token is up to date"
               continue
             fi
             # --write-only --commit updates version + sha256 and commits locally,
-            # so no pull request permission is needed.
-            brew bump-cask-pr --write-only --commit "$TAP_NAME/$token"
+            # so no pull request permission is needed. --version is required:
+            # bump-cask-pr does not read livecheck itself.
+            brew bump-cask-pr --write-only --commit --version "$latest" "$TAP_NAME/$token"
             bumped=1
           done
           echo "bumped=$bumped" >> "$GITHUB_OUTPUT"
