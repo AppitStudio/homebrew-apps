@@ -24,6 +24,7 @@ concurrency:
 jobs:
   autobump:
     runs-on: macos-26
+    timeout-minutes: 30
     permissions:
       contents: write
     steps:
@@ -66,7 +67,9 @@ jobs:
       - name: Push commits
         if: steps.bump.outputs.bumped == '1'
         uses: Homebrew/actions/git-try-push@8f3d1ec8a696b3b9d9a6c3696b6c73033cab69e4 # 2026.08.14.1
+        # No token here: setup-homebrew already installed a global git
+        # Authorization header for github.com. Passing one again makes git
+        # send two headers and GitHub rejects the push with HTTP 400.
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           directory: ${{ steps.set-up-homebrew.outputs.repository-path }}
           branch: main
