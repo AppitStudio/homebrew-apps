@@ -1,6 +1,6 @@
 cask "extrabar" do
-  version "1.5.2"
-  sha256 "5e8f4028238dde32a33034440fba95feb4fea375591c3be5c7c18125055c66fb"
+  version "1.7.5"
+  sha256 "4a3fa8d64c456b784920a7721b9d559068d91f8cd856c0c37e7b5906a19ddc59"
 
   url "https://github.com/AppitStudio/extra-bar-updates/releases/download/v#{version}/ExtraBar.dmg"
   name "ExtraBar"
