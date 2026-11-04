@@ -4,7 +4,14 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'Casks/**'
+      - '.github/workflows/tests.yml'
   pull_request:
+    paths:
+      - 'Casks/**'
+      - '.github/workflows/tests.yml'
+  workflow_dispatch:
 
 permissions: {}
 
@@ -18,10 +25,11 @@ concurrency:
 
 jobs:
   test:
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-26, macos-15]
+        os: ${{ fromJSON(github.event_name == 'pull_request' && '["macos-26"]' || '["macos-26","macos-15"]') }}
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
